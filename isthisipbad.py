@@ -2,17 +2,12 @@
 
 import os
 import sys
-import urllib3
 import argparse
-import re
 import socket
 import dns
 import warnings
 from dns import resolver
 from requests import get
-
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-
 
 def color(text, color_code):
     if sys.platform == "win32" and os.getenv("TERM") != "xterm":
@@ -36,20 +31,6 @@ def green(text):
 def blue(text):
     return color(text, 34)
 
-
-def content_test(url, badip):
-    try:
-        request = urllib3.Request(url)
-        opened_request = urllib3.build_opener().open(request)
-        html_content = opened_request.read()
-        retcode = opened_request.code
-
-        matches = retcode == 200
-        matches = matches and re.findall(badip, html_content)
-
-        return len(matches) == 0
-    except:
-        return False
 
 bls = ["b.barracudacentral.org", "bl.spamcop.net",
        "blacklist.woody.ch", "cbl.abuseat.org",
@@ -76,90 +57,9 @@ bls = ["b.barracudacentral.org", "bl.spamcop.net",
        "web.dnsbl.sorbs.net", "wormrbl.imp.ch", "xbl.spamhaus.org",
        "zen.spamhaus.org", "zombie.dnsbl.sorbs.net"]
 
-URLS = [
-    #TOR
-    ('http://torstatus.blutmagie.de/ip_list_exit.php/Tor_ip_list_EXIT.csv',
-     'is not a TOR Exit Node',
-     'is a TOR Exit Node',
-     False),
-
-    #EmergingThreats
-    ('http://rules.emergingthreats.net/blockrules/compromised-ips.txt',
-     'is not listed on EmergingThreats',
-     'is listed on EmergingThreats',
-     True),
-
-    #AlienVault
-    ('http://reputation.alienvault.com/reputation.data',
-     'is not listed on AlienVault',
-     'is listed on AlienVault',
-     True),
-
-    #BlocklistDE
-    ('http://www.blocklist.de/lists/bruteforcelogin.txt',
-     'is not listed on BlocklistDE',
-     'is listed on BlocklistDE',
-     True),
-
-    #Dragon Research Group - SSH
-    ('http://dragonresearchgroup.org/insight/sshpwauth.txt',
-     'is not listed on Dragon Research Group - SSH',
-     'is listed on Dragon Research Group - SSH',
-     True),
-
-    #Dragon Research Group - VNC
-    ('http://dragonresearchgroup.org/insight/vncprobe.txt',
-     'is not listed on Dragon Research Group - VNC',
-     'is listed on Dragon Research Group - VNC',
-     True),
-
-    #NoThinkMalware
-    ('http://www.nothink.org/blacklist/blacklist_malware_http.txt',
-     'is not listed on NoThink Malware',
-     'is listed on NoThink Malware',
-     True),
-
-    #NoThinkSSH
-    ('http://www.nothink.org/blacklist/blacklist_ssh_all.txt',
-     'is not listed on NoThink SSH',
-     'is listed on NoThink SSH',
-     True),
-
-    #Feodo
-    ('http://rules.emergingthreats.net/blockrules/compromised-ips.txt',
-     'is not listed on Feodo',
-     'is listed on Feodo',
-     True),
-
-    #antispam.imp.ch
-    ('http://antispam.imp.ch/spamlist',
-     'is not listed on antispam.imp.ch',
-     'is listed on antispam.imp.ch',
-     True),
-
-    #dshield
-    ('http://www.dshield.org/ipsascii.html?limit=10000',
-     'is not listed on dshield',
-     'is listed on dshield',
-     True),
-
-    #malc0de
-    ('http://malc0de.com/bl/IP_Blacklist.txt',
-     'is not listed on malc0de',
-     'is listed on malc0de',
-     True),
-
-    #MalWareBytes
-    ('http://hosts-file.net/rss.asp',
-     'is not listed on MalWareBytes',
-     'is listed on MalWareBytes',
-     True)]
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Is This IP Bad?')
     parser.add_argument('-i', '--ip', help='IP address to check')
-    parser.add_argument('--success', help='Also display GOOD', required=False, action="store_true")
     args = parser.parse_args()
 
     if args is not None and args.ip is not None and len(args.ip) > 0:
@@ -192,18 +92,6 @@ if __name__ == "__main__":
 
     BAD = 0
     GOOD = 0
-
-    for url, succ, fail, mal in URLS:
-        if content_test(url, badip):
-            if args.success:
-                (green('{0} {1}'.format(badip, succ)))
-                GOOD = GOOD + 1
-            else:
-                (red('{0} {1}'.format(badip, fail)))
-                BAD = BAD + 1
-
-    BAD = BAD
-    GOOD = GOOD
 
     for bl in bls:
         try:
