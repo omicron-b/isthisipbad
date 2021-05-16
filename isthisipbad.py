@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import urllib3
@@ -6,7 +8,7 @@ import re
 import socket
 import dns
 import warnings
-from dns import resolver 
+from dns import resolver
 from requests import get
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -50,8 +52,8 @@ def content_test(url, badip):
         return False
 
 bls = ["b.barracudacentral.org", "bl.spamcop.net",
-       "blacklist.woody.ch", "cbl.abuseat.org", 
-       "combined.abuse.ch", "combined.rbl.msrbl.net", 
+       "blacklist.woody.ch", "cbl.abuseat.org",
+       "combined.abuse.ch", "combined.rbl.msrbl.net",
        "db.wpbl.info", "dnsbl.cyberlogic.net",
        "dnsbl.sorbs.net", "drone.abuse.ch", "drone.abuse.ch",
        "duinv.aupads.org", "dul.dnsbl.sorbs.net", "dul.ru",
