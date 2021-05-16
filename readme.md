@@ -1,13 +1,16 @@
 # Is this IP Bad?
 
-Is This IP Bad? is a python script that will check an IP against popular IP and DNS blacklists.
+Is This IP Bad? is a Python script that will check a given IP against popular IP and DNS blacklists.
+
+## Install dependencies
+
+```
+pip3 install wheel
+pip3 install urllib3
+pip3 install dnspython
+pip3 install requests
+```
 
 ## Usage
 
-python3 isthisipbad.py
-
-## Important Notice
-
-*I don't know what I am doing.*
-
-*Update:*  I wrote this code over six years ago as a side project and had not given it much thought. Since people were still using it, it had some errors and bad lists, so I updated it to Python3 and removed offline or bad sources.
+`./isthisipbad.py -i <ip_to_check>`
